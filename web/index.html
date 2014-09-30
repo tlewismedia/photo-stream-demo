@@ -1,0 +1,66 @@
+<!doctype html>
+<head>
+  <meta charset="utf-8">
+  <title>My Parse App</title>
+  <meta name="description" content="My Parse App">
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script src="http://www.parsecdn.com/js/parse-1.2.18.min.js"></script>
+</head>
+
+<body>
+
+  <h1>Uploaded Photos</h1>
+  
+  <div id="main">
+    <div id="loading">LOADING.....</div>
+    <ul id="namelist"></ul>
+  </div>
+
+  <script type="text/javascript">
+    //parse key
+    Parse.initialize("###", "###");
+    
+    var TestObject = Parse.Object.extend("TestObject");
+    var TestCollection = Parse.Collection.extend({
+      model: TestObject
+    });
+    var caption;
+    var image;
+    var collection = new TestCollection();
+    
+    //fetch objects from Parse
+    collection.fetch({
+
+      success: function(collection) {
+
+        $("#loading").css('display', 'none');
+
+        collection.each(function(object) {
+
+          if (!(caption = object.get("name"))){
+            caption = " ";
+          };
+
+
+          if (image = object.get("imageFile")){  //only display if there's an image
+                      
+            $("#namelist").append( "<li class='cap'>"+  caption +"</li>\n" ) ; 
+            $("#namelist").append( "<li><img class='img' src='"+image.url()+"'></li>\n" ) ;
+
+          }            
+        });
+      },
+
+      error: function(collection, error) {
+        alert("an error has occured");
+      } 
+
+    });
+
+  </script>
+</body>
+
+</html>
